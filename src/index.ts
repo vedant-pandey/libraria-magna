@@ -2,25 +2,27 @@
  // Imports //
 //=========//
 
-import express							 = require('express');
-import dotenv								 = require('dotenv');
-import mongoose							 = require('mongoose');
-import bodyParser						 = require('body-parser');
-import passport							 = require('passport');
-import LocalStrategy				 = require('passport-local');
-import passportLocalMongoose = require('passport-local-mongoose');
-import expressSanitizer			 = require('express-sanitizer');
-import flash								 = require('connect-flash');
-import session							 = require('express-session');
-import methodOverride 			 = require('method-override');
-import path 								 = require('path');
+
+import { User }	from './models'
+
+import express					= require('express');
+import dotenv						= require('dotenv');
+import mongoose					= require('mongoose');
+import bodyParser				= require('body-parser');
+import passport					= require('passport');
+import LocalStrategy		= require('passport-local');
+import expressSanitizer	= require('express-sanitizer');
+import path 						= require('path');
+import session					= require('express-session');
+import methodOverride 	= require('method-override');
+import flash						= require('connect-flash');
 
 	//================//
  // Initialisation //
 //================//
 
 dotenv.config()
-const app   		 : express.Application = express(),
+const app   		 : express.Application = express.application,
 			PORT  		 : string							 = process.env.PORT || '7263',
 			DBURL 		 : string							 = process.env.DBURL || 'mongodb://localhost/library',
 			APP_SECRET : string							 = process.env.APP_SECRET || 'SECRET',
@@ -55,6 +57,9 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(new LocalStrategy.Strategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next){
 	res.locals.user = req.user;
 	res.locals.error = req.flash('error');
@@ -69,6 +74,7 @@ app.use(function(req, res, next){
 app.listen(PORT, function(){
 	console.log(`Server running ${PORT}\n`);
 });
+
 process.on('SIGINT',function(){
 	console.log('Closing server');
 	process.exit();
