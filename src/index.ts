@@ -1,9 +1,16 @@
+import { Routes, Pages } from './routes/constants';
 	//=========//
  // Imports //
 //=========//
 
 
-import { User }	from './models'
+import { User }			from './models'
+import {
+	BookRoutes,
+	IssuanceRoutes,
+	UserRoutes,
+	AdminRoutes
+} 									from './routes'
 
 import express					= require('express');
 import dotenv						= require('dotenv');
@@ -29,7 +36,7 @@ const app   		 : express.Application = express.application,
 			PARENT_DIR : string							 = __dirname.split(path.delimiter)
 																									.slice(0,__dirname.split(path.delimiter).length - 1)
 																									.join(path.delimiter)
-  //=============//
+	//=============//
  // Connections //
 //=============//
 
@@ -46,7 +53,7 @@ app.use(expressSanitizer());
 app.use(methodOverride('_method'));
 app.use(flash());
 
-  //=================//
+	//=================//
  // Passport Config //
 //=================//
 
@@ -67,11 +74,29 @@ app.use(function(req, res, next){
 	next();
 });
 
-  //==========//
+
+	//========//
+ // Routes //
+//========//
+
+app.use('/',BookRoutes.default);
+app.use('/', AdminRoutes.default);
+app.use('/', UserRoutes.default);
+app.use('/', IssuanceRoutes.default);
+
+app.get(Routes.NotFound,function(req, res){
+		res.render(Pages.NotFound);
+});
+
+app.get('*', function(req,res){
+		res.redirect(Routes.NotFound);
+});
+
+	//==========//
  // Listener //
 //==========//
 
-app.listen(PORT, function(){
+app.listen(PORT, () => {
 	console.log(`Server running ${PORT}\n`);
 });
 

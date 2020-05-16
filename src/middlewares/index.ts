@@ -43,7 +43,7 @@ const isLoggedIn = (req : Request, res : Response, next : NextFunction) => {
 }
 
 
-export const middleware : Middleware = {
+export const Middleware : Middleware = {
 	isAdmin,
 	isLoggedIn
 };

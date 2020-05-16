@@ -5,12 +5,9 @@ import passportLocalMongoose = require('passport-local-mongoose')
 const IssuanceSchema = new mongoose.Schema({
 	userId		: mongoose.Schema.Types.ObjectId,
 	bookId		: mongoose.Schema.Types.ObjectId,
-	expiryTs	: Number,
+	startTs		: Number,
+	endTs			: Number,
 	approved	: {
-								type 		: Boolean,
-								default : false
-							},
-	deleted		: {
 								type 		: Boolean,
 								default : false
 							},
@@ -22,4 +19,4 @@ const IssuanceSchema = new mongoose.Schema({
 
 IssuanceSchema.plugin(passportLocalMongoose);
 
-export const Issuance = mongoose.model('Book', IssuanceSchema as mongoose.PassportLocalSchema);
+export const Issuance = mongoose.model('Issuance', IssuanceSchema as mongoose.PassportLocalSchema);
